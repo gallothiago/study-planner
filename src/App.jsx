@@ -1,11 +1,10 @@
+// Explicação: O App.jsx agora tem uma única responsabilidade:
+// importar e renderizar a nossa página de login.
+// Ele serve como o ponto de entrada principal da nossa aplicação.
+import LoginPage from './pages/LoginPage';
+
 function App() {
-  return (
-    <div>
-      <h1 className="p-4 text-3xl font-bold underline text-blue-600">
-        Study Planner
-      </h1>
-    </div>
-  )
+  return <LoginPage />;
 }
 
-export default App
+export default App;
