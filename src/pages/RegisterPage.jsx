@@ -1,15 +1,12 @@
 import { useState } from 'react';
 
-// Explicação: Adicionamos um parágrafo no final do formulário com um botão.
-// Ao ser clicado, ele chama a função `onSwitchPage` que receberemos via props,
-// pedindo para mudar a página para 'register'.
-function LoginPage({ onSwitchPage }) {
+function RegisterPage({ onSwitchPage }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (event) => {
+  const handleRegister = (event) => {
     event.preventDefault();
-    console.log('Tentativa de login com:');
+    console.log('Tentativa de registro com:');
     console.log({ email, password });
   };
 
@@ -17,12 +14,11 @@ function LoginPage({ onSwitchPage }) {
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-xl shadow-lg">
         <h1 className="text-3xl font-bold text-center text-white">
-          Study Planner
+          Criar Nova Conta
         </h1>
-        <p className="text-center text-gray-400">Faça login para continuar</p>
+        <p className="text-center text-gray-400">Preencha os dados para se registrar</p>
 
-        <form onSubmit={handleLogin} className="space-y-6">
-          {/* ... campos de email e senha continuam os mesmos ... */}
+        <form onSubmit={handleRegister} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-300">
               E-mail
@@ -32,7 +28,8 @@ function LoginPage({ onSwitchPage }) {
               id="email"
               name="email"
               placeholder="seu-email@exemplo.com"
-              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              // MUDANÇA: A cor do anel de foco agora é verde.
+              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -47,7 +44,8 @@ function LoginPage({ onSwitchPage }) {
               id="password"
               name="password"
               placeholder="********"
-              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              // MUDANÇA: A cor do anel de foco agora é verde.
+              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -56,17 +54,18 @@ function LoginPage({ onSwitchPage }) {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+              // MUDANÇA: A cor do botão agora é verde.
+              className="w-full px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-800"
             >
-              Entrar
+              Registrar
             </button>
           </div>
         </form>
 
         <p className="text-sm text-center text-gray-400">
-          Não tem uma conta?{' '}
-          <button onClick={() => onSwitchPage('register')} className="font-medium text-blue-500 hover:underline">
-            Crie uma
+          Já tem uma conta?{' '}
+          <button onClick={() => onSwitchPage('login')} className="font-medium text-blue-500 hover:underline">
+            Faça login
           </button>
         </p>
       </div>
@@ -74,4 +73,4 @@ function LoginPage({ onSwitchPage }) {
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
