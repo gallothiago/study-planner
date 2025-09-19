@@ -6,14 +6,7 @@ import ScheduleList from '../components/ScheduleList';
 import CvSuggestion from '../components/CvSuggestion';
 import AddNoteForm from '../components/AddNoteForm';
 import NoteList from '../components/NoteList';
-
-// 1. Atualizamos a lista de itens do menu
-const menuItems = [
-  { id: 'anotacoes', label: 'Anotações' },
-  { id: 'horarios', label: 'Horários de Estudo' },
-  { id: 'certificado', label: 'Adicionar Certificado' },
-  { id: 'curriculo', label: 'Sugestão para Currículo' },
-];
+import Footer from '../components/Footer'; // 1. Importamos o rodapé
 
 function CourseDetailPage({ courseId, onGoBack }) {
   const [course, setCourse] = useState(null);
@@ -57,83 +50,89 @@ function CourseDetailPage({ courseId, onGoBack }) {
   if (loading) return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center">Carregando...</div>;
   if (!course) return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center">Curso não encontrado.</div>;
 
+  const menuItems = [
+    { id: 'anotacoes', label: 'Anotações' },
+    { id: 'horarios', label: 'Horários de Estudo' },
+    { id: 'certificado', label: 'Adicionar Certificado' },
+    { id: 'curriculo', label: 'Sugestão para Currículo' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
-      <header className="mb-8">
-        <button onClick={onGoBack} className="text-indigo-400 hover:underline mb-4">&larr; Voltar para o Dashboard</button>
-        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white">{course.name}</h1>
-            <span className={`mt-1 inline-block px-3 py-1 text-sm font-semibold rounded-full ${course.completed ? 'bg-green-500 text-white' : 'bg-yellow-500 text-gray-900'}`}>
-              {course.completed ? 'Concluído' : 'Em Progresso'}
-            </span>
-          </div>
-          {/* 2. Demos mais destaque aos botões de ação principais */}
-          <div className="flex items-center gap-4">
-            <a href={course.link} target="_blank" rel="noopener noreferrer" className="px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors duration-200">
-              Acessar Curso
-            </a>
-            <button onClick={handleMarkAsComplete} className={`px-4 py-2 font-bold text-white rounded-md ${course.completed ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`}>
-              {course.completed ? 'Reabrir Curso' : 'Concluir Curso'}
-            </button>
-          </div>
-        </div>
-      </header>
-      
-      <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <aside className="lg:col-span-1">
-          <nav className="space-y-2">
-            {menuItems.map(item => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full text-left px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  activeTab === item.id 
-                  ? 'bg-indigo-600 text-white' 
-                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                }`}
-              >
-                {item.label}
+    // 2. Alteramos a estrutura para um layout de coluna
+    <div className="flex flex-col min-h-screen bg-gray-900 text-gray-100">
+      <div className="flex-grow p-4 md:p-8">
+        <header className="mb-8">
+          <button onClick={onGoBack} className="text-indigo-400 hover:underline mb-4">&larr; Voltar para o Dashboard</button>
+          <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-white">{course.name}</h1>
+              <span className={`mt-1 inline-block px-3 py-1 text-sm font-semibold rounded-full ${course.completed ? 'bg-green-500 text-white' : 'bg-yellow-500 text-gray-900'}`}>
+                {course.completed ? 'Concluído' : 'Em Progresso'}
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <a href={course.link} target="_blank" rel="noopener noreferrer" className="px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors duration-200">
+                Acessar Curso
+              </a>
+              <button onClick={handleMarkAsComplete} className={`px-4 py-2 font-bold text-white rounded-md ${course.completed ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`}>
+                {course.completed ? 'Reabrir Curso' : 'Concluir Curso'}
               </button>
-            ))}
-          </nav>
-        </aside>
-
-        <div className="lg:col-span-3">
-          {/* 3. A renderização condicional agora reflete o novo menu */}
-          
-          {activeTab === 'anotacoes' && (
-            <div className="space-y-8">
-              <AddNoteForm courseId={courseId} />
-              <NoteList courseId={courseId} />
             </div>
-          )}
+          </div>
+        </header>
+        
+        <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <aside className="lg:col-span-1">
+            <nav className="space-y-2">
+              {menuItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full text-left px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    activeTab === item.id 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+          </aside>
 
-          {activeTab === 'horarios' && (
-            <div className="space-y-8">
-              <ScheduleForm courseId={courseId} />
-              <ScheduleList courseId={courseId} />
-            </div>
-          )}
-
-          {activeTab === 'certificado' && (
-            <div className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4">
-              <h3 className="text-xl font-bold text-white">Adicionar Certificado</h3>
-              <form onSubmit={handleSaveCertificate}>
-                <label htmlFor="certificateUrl" className="block text-sm font-medium text-gray-300">Link do Certificado</label>
-                <div className="flex gap-2 mt-2">
-                  <input type="url" id="certificateUrl" value={certificateUrl} onChange={(e) => setCertificateUrl(e.target.value)} placeholder="https://exemplo.com/certificado.pdf" className="flex-grow px-4 py-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md"/>
-                  <button type="submit" className="px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700">Salvar Link</button>
-                </div>
-              </form>
-            </div>
-          )}
-          
-          {activeTab === 'curriculo' && (
-            <CvSuggestion courseName={course.name} />
-          )}
-        </div>
-      </main>
+          <div className="lg:col-span-3">
+            {activeTab === 'anotacoes' && (
+              <div className="space-y-8">
+                <AddNoteForm courseId={courseId} />
+                <NoteList courseId={courseId} />
+              </div>
+            )}
+            {activeTab === 'horarios' && (
+              <div className="space-y-8">
+                <ScheduleForm courseId={courseId} />
+                <ScheduleList courseId={courseId} />
+              </div>
+            )}
+            {activeTab === 'certificado' && (
+              <div className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4">
+                <h3 className="text-xl font-bold text-white">Adicionar Certificado</h3>
+                <form onSubmit={handleSaveCertificate}>
+                  <label htmlFor="certificateUrl" className="block text-sm font-medium text-gray-300">Link do Certificado</label>
+                  <div className="flex gap-2 mt-2">
+                    <input type="url" id="certificateUrl" value={certificateUrl} onChange={(e) => setCertificateUrl(e.target.value)} placeholder="https://exemplo.com/certificado.pdf" className="flex-grow px-4 py-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md"/>
+                    <button type="submit" className="px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700">Salvar Link</button>
+                  </div>
+                </form>
+              </div>
+            )}
+            {activeTab === 'curriculo' && (
+              <CvSuggestion courseName={course.name} />
+            )}
+          </div>
+        </main>
+      </div>
+      {/* 3. Adicionamos o rodapé */}
+      <Footer />
     </div>
   );
 }
