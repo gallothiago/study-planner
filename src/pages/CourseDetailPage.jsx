@@ -4,13 +4,22 @@ import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import ScheduleForm from '../components/ScheduleForm';
 import ScheduleList from '../components/ScheduleList';
 import CvSuggestion from '../components/CvSuggestion';
+import AddNoteForm from '../components/AddNoteForm';
+import NoteList from '../components/NoteList';
+
+// 1. Atualizamos a lista de itens do menu
+const menuItems = [
+  { id: 'anotacoes', label: 'Anotações' },
+  { id: 'horarios', label: 'Horários de Estudo' },
+  { id: 'certificado', label: 'Adicionar Certificado' },
+  { id: 'curriculo', label: 'Sugestão para Currículo' },
+];
 
 function CourseDetailPage({ courseId, onGoBack }) {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [notes, setNotes] = useState('');
-  const [lastLesson, setLastLesson] = useState('');
   const [certificateUrl, setCertificateUrl] = useState('');
+  const [activeTab, setActiveTab] = useState('anotacoes');
 
   useEffect(() => {
     const docRef = doc(db, 'courses', courseId);
@@ -18,25 +27,21 @@ function CourseDetailPage({ courseId, onGoBack }) {
       if (doc.exists()) {
         const courseData = { id: doc.id, ...doc.data() };
         setCourse(courseData);
-        setNotes(courseData.notes || '');
-        setLastLesson(courseData.lastLesson || '');
         setCertificateUrl(courseData.certificateUrl || '');
-      } else {
-        console.log("Documento não encontrado!");
       }
       setLoading(false);
     });
     return () => unsubscribe();
   }, [courseId]);
 
-  const handleSaveChanges = async (e) => {
+  const handleSaveCertificate = async (e) => {
     e.preventDefault();
     const docRef = doc(db, 'courses', courseId);
     try {
-      await updateDoc(docRef, { notes, lastLesson, certificateUrl });
-      alert('Alterações salvas com sucesso!');
+      await updateDoc(docRef, { certificateUrl });
+      alert('Link do certificado salvo com sucesso!');
     } catch (error) {
-      console.error("Erro ao atualizar o curso: ", error);
+      console.error("Erro ao salvar detalhes: ", error);
     }
   };
 
@@ -56,48 +61,77 @@ function CourseDetailPage({ courseId, onGoBack }) {
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
       <header className="mb-8">
         <button onClick={onGoBack} className="text-indigo-400 hover:underline mb-4">&larr; Voltar para o Dashboard</button>
-        <div className="flex justify-between items-start">
+        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white">{course.name}</h1>
-            <a href={course.link} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-400 hover:underline">Acessar o curso</a>
+            <span className={`mt-1 inline-block px-3 py-1 text-sm font-semibold rounded-full ${course.completed ? 'bg-green-500 text-white' : 'bg-yellow-500 text-gray-900'}`}>
+              {course.completed ? 'Concluído' : 'Em Progresso'}
+            </span>
           </div>
-          <span className={`px-3 py-1 text-sm font-semibold rounded-full ${course.completed ? 'bg-green-500 text-white' : 'bg-yellow-500 text-gray-900'}`}>
-            {course.completed ? 'Concluído' : 'Em Progresso'}
-          </span>
+          {/* 2. Demos mais destaque aos botões de ação principais */}
+          <div className="flex items-center gap-4">
+            <a href={course.link} target="_blank" rel="noopener noreferrer" className="px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors duration-200">
+              Acessar Curso
+            </a>
+            <button onClick={handleMarkAsComplete} className={`px-4 py-2 font-bold text-white rounded-md ${course.completed ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`}>
+              {course.completed ? 'Reabrir Curso' : 'Concluir Curso'}
+            </button>
+          </div>
         </div>
       </header>
       
-      <main className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-8">
-          <form onSubmit={handleSaveChanges} className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4 h-fit">
-            <div>
-              <label htmlFor="lastLesson" className="block text-sm font-medium text-gray-300">Última aula assistida</label>
-              <input type="text" id="lastLesson" value={lastLesson} onChange={(e) => setLastLesson(e.target.value)} placeholder="Ex: Secção 5, Aula 32" className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-            </div>
-            <div>
-              <label htmlFor="notes" className="block text-sm font-medium text-gray-300">Anotações</label>
-              <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows="8" placeholder="Digite as suas anotações..." className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-            </div>
-            <div>
-              <label htmlFor="certificateUrl" className="block text-sm font-medium text-gray-300">Link do Certificado</label>
-              <input type="url" id="certificateUrl" value={certificateUrl} onChange={(e) => setCertificateUrl(e.target.value)} placeholder="https://exemplo.com/certificado.pdf" className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
-            </div>
-            <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700">Salvar Alterações</button>
-          </form>
+      <main className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <aside className="lg:col-span-1">
+          <nav className="space-y-2">
+            {menuItems.map(item => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full text-left px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  activeTab === item.id 
+                  ? 'bg-indigo-600 text-white' 
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </aside>
 
-          <div className="p-6 bg-gray-800 rounded-xl shadow-lg flex justify-between items-center">
-             <h3 className="text-lg font-bold text-white">Estado do Curso</h3>
-             <button onClick={handleMarkAsComplete} className={`px-4 py-2 font-bold text-white rounded-md ${course.completed ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`}>
-               {course.completed ? 'Marcar "Em Progresso"' : 'Marcar como Concluído'}
-             </button>
-          </div>
+        <div className="lg:col-span-3">
+          {/* 3. A renderização condicional agora reflete o novo menu */}
+          
+          {activeTab === 'anotacoes' && (
+            <div className="space-y-8">
+              <AddNoteForm courseId={courseId} />
+              <NoteList courseId={courseId} />
+            </div>
+          )}
 
-          <CvSuggestion courseName={course.name} />
-        </div>
+          {activeTab === 'horarios' && (
+            <div className="space-y-8">
+              <ScheduleForm courseId={courseId} />
+              <ScheduleList courseId={courseId} />
+            </div>
+          )}
 
-        <div className="space-y-8">
-          <ScheduleForm courseId={courseId} />
-          <ScheduleList courseId={courseId} />
+          {activeTab === 'certificado' && (
+            <div className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4">
+              <h3 className="text-xl font-bold text-white">Adicionar Certificado</h3>
+              <form onSubmit={handleSaveCertificate}>
+                <label htmlFor="certificateUrl" className="block text-sm font-medium text-gray-300">Link do Certificado</label>
+                <div className="flex gap-2 mt-2">
+                  <input type="url" id="certificateUrl" value={certificateUrl} onChange={(e) => setCertificateUrl(e.target.value)} placeholder="https://exemplo.com/certificado.pdf" className="flex-grow px-4 py-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md"/>
+                  <button type="submit" className="px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700">Salvar Link</button>
+                </div>
+              </form>
+            </div>
+          )}
+          
+          {activeTab === 'curriculo' && (
+            <CvSuggestion courseName={course.name} />
+          )}
         </div>
       </main>
     </div>
