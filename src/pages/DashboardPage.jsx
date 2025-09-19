@@ -3,8 +3,9 @@ import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
 import AddCourseForm from '../components/AddCourseForm';
 import CourseList from '../components/CourseList';
-// 1. Importamos o novo componente da lista de concluídos
 import CompletedCourseList from '../components/CompletedCourseList';
+// 1. Importamos o novo componente do plano de estudos
+import StudySchedule from '../components/StudySchedule';
 
 function DashboardPage({ user, onSelectCourse }) {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -50,10 +51,11 @@ function DashboardPage({ user, onSelectCourse }) {
           </div>
         )}
 
-        {/* Lista de cursos em progresso */}
+        {/* 2. Adicionamos o novo painel do plano de estudos aqui */}
+        <StudySchedule user={user} onSelectCourse={onSelectCourse} />
+
         <CourseList user={user} onSelectCourse={onSelectCourse} />
 
-        {/* 2. Adicionamos a nova lista de cursos concluídos aqui */}
         <CompletedCourseList user={user} onSelectCourse={onSelectCourse} />
       </main>
     </div>

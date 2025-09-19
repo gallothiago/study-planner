@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { db } from '../firebase/config';
-import { collection, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
+// 1. Corrigimos a linha de importação para incluir a função `doc`
+import { collection, serverTimestamp, writeBatch, doc } from 'firebase/firestore';
 
-// Array para ajudar a renderizar os dias da semana
 const weekDays = [
   { id: 'segunda', label: 'Seg' },
   { id: 'terca', label: 'Ter' },
@@ -14,14 +14,12 @@ const weekDays = [
 ];
 
 function ScheduleForm({ courseId }) {
-  // 1. O estado dos dias agora é um objeto para controlar cada checkbox individualmente
   const [days, setDays] = useState({
     segunda: false, terca: false, quarta: false, quinta: false, sexta: false, sabado: false, domingo: false
   });
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
 
-  // Função para atualizar o estado dos dias quando uma checkbox é clicada
   const handleDayChange = (dayId) => {
     setDays(prevDays => ({
       ...prevDays,
@@ -39,13 +37,12 @@ function ScheduleForm({ courseId }) {
     }
 
     try {
-      // 2. Usamos um "batch write" do Firestore para criar todos os documentos de uma só vez.
-      // Isto é mais eficiente e garante que ou todos são criados, ou nenhum é.
       const batch = writeBatch(db);
       const scheduleCollection = collection(db, 'courses', courseId, 'schedule');
 
       selectedDays.forEach(day => {
-        const newDocRef = doc(scheduleCollection); // Criamos uma referência para um novo documento
+        // Agora a função `doc` é reconhecida
+        const newDocRef = doc(scheduleCollection);
         batch.set(newDocRef, {
           day: day,
           startTime: startTime,
@@ -54,9 +51,8 @@ function ScheduleForm({ courseId }) {
         });
       });
 
-      await batch.commit(); // Enviamos o lote para o Firestore
+      await batch.commit();
 
-      // Limpa o formulário
       setStartTime('');
       setEndTime('');
       setDays({ segunda: false, terca: false, quarta: false, quinta: false, sexta: false, sabado: false, domingo: false });
@@ -71,7 +67,6 @@ function ScheduleForm({ courseId }) {
     <form onSubmit={handleSubmit} className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4">
       <h3 className="text-xl font-bold text-white">Adicionar Horário de Estudo</h3>
       
-      {/* 3. Secção de seleção de dias com checkboxes */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">Dias da Semana</label>
         <div className="grid grid-cols-4 gap-2">
