@@ -1,10 +1,12 @@
+import { useState } from 'react'; // 1. Importamos o useState
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
 import AddCourseForm from '../components/AddCourseForm';
 import CourseList from '../components/CourseList';
 
-// O Dashboard recebe o objeto `user` completo do App.jsx
 function DashboardPage({ user, onSelectCourse }) {
+  // 2. Criamos um estado para controlar a visibilidade do formulário
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -21,7 +23,6 @@ function DashboardPage({ user, onSelectCourse }) {
           <h1 className="text-2xl md:text-3xl font-bold text-white">
             Study Planner
           </h1>
-          {/* 1. Verificamos se user.displayName existe e o exibimos */}
           <p className="text-indigo-400">
             Bem-vindo(a), {user.displayName || 'Utilizador'}!
           </p>
@@ -35,7 +36,22 @@ function DashboardPage({ user, onSelectCourse }) {
       </header>
 
       <main>
-        <AddCourseForm user={user} />
+        {/* 3. Lógica de renderização condicional */}
+        {isFormVisible ? (
+          // Se for visível, mostramos o formulário e passamos uma função para o fechar
+          <AddCourseForm user={user} onClose={() => setIsFormVisible(false)} />
+        ) : (
+          // Senão, mostramos o botão para o abrir
+          <div className="mb-8">
+            <button
+              onClick={() => setIsFormVisible(true)}
+              className="w-full md:w-auto px-6 py-3 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors duration-200"
+            >
+              + Adicionar Novo Curso
+            </button>
+          </div>
+        )}
+
         <CourseList user={user} onSelectCourse={onSelectCourse} />
       </main>
     </div>
@@ -43,3 +59,4 @@ function DashboardPage({ user, onSelectCourse }) {
 }
 
 export default DashboardPage;
+
