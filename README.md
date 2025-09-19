@@ -64,7 +64,7 @@ Para executar este projeto no seu ambiente de desenvolvimento, siga os passos ab
 
 Clone o repositório:
 
-git clone [https://github.com/seu-usuario/study-planner.git](https://github.com/seu-usuario/study-planner.git)
+git clone [https://github.com/gallothiago/study-planner.git](https://github.com/gallothiago/study-planner.git)
 cd study-planner
 
 Instale as dependências:
