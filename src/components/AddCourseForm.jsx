@@ -13,18 +13,15 @@ function AddCourseForm({ user }) {
       alert('Por favor, preencha o nome e o link do curso.');
       return;
     }
-
     try {
-      // 'courses' é o nome da nossa coleção no Firestore
       await addDoc(collection(db, 'courses'), {
         name: courseName,
         link: courseLink,
         priority: coursePriority,
-        userId: user.uid, // Associa o curso ao usuário logado
-        createdAt: serverTimestamp(), // Adiciona um carimbo de data/hora do servidor
+        userId: user.uid,
+        createdAt: serverTimestamp(),
         completed: false,
       });
-      // Limpa o formulário após o envio
       setCourseName('');
       setCourseLink('');
       setCoursePriority('baixa');
@@ -44,7 +41,7 @@ function AddCourseForm({ user }) {
           id="courseName"
           value={courseName}
           onChange={(e) => setCourseName(e.target.value)}
-          className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
       <div>
@@ -54,7 +51,7 @@ function AddCourseForm({ user }) {
           id="courseLink"
           value={courseLink}
           onChange={(e) => setCourseLink(e.target.value)}
-          className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
       <div>
@@ -63,14 +60,14 @@ function AddCourseForm({ user }) {
           id="coursePriority"
           value={coursePriority}
           onChange={(e) => setCoursePriority(e.target.value)}
-          className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           <option value="baixa">Baixa</option>
           <option value="media">Média</option>
           <option value="alta">Alta</option>
         </select>
       </div>
-      <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+      <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
         Adicionar Curso
       </button>
     </form>

@@ -13,19 +13,14 @@ function ScheduleForm({ courseId }) {
       alert('Por favor, preencha os horários de início e fim.');
       return;
     }
-
     try {
-      // Criamos uma referência para a subcoleção 'schedule' dentro do curso específico
       const scheduleCollection = collection(db, 'courses', courseId, 'schedule');
-      
       await addDoc(scheduleCollection, {
         day: day,
         startTime: startTime,
         endTime: endTime,
         createdAt: serverTimestamp(),
       });
-
-      // Limpa o formulário
       setStartTime('');
       setEndTime('');
     } catch (error) {
@@ -76,7 +71,7 @@ function ScheduleForm({ courseId }) {
           />
         </div>
       </div>
-      <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700">
+      <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
         Adicionar Horário
       </button>
     </form>

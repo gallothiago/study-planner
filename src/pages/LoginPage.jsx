@@ -9,8 +9,6 @@ function LoginPage({ onSwitchPage }) {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      // Apenas chamamos a função de login.
-      // O App.jsx vai detectar a mudança e redirecionar para o Dashboard.
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error('Erro no login:', error.message);
@@ -25,7 +23,6 @@ function LoginPage({ onSwitchPage }) {
           Study Planner
         </h1>
         <p className="text-center text-gray-400">Faça login para continuar</p>
-
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-300">
@@ -36,7 +33,7 @@ function LoginPage({ onSwitchPage }) {
               id="email"
               name="email"
               placeholder="seu-email@exemplo.com"
-              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -50,7 +47,7 @@ function LoginPage({ onSwitchPage }) {
               id="password"
               name="password"
               placeholder="********"
-              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -58,16 +55,15 @@ function LoginPage({ onSwitchPage }) {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+              className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               Entrar
             </button>
           </div>
         </form>
-
         <p className="text-sm text-center text-gray-400">
           Não tem uma conta?{' '}
-          <button onClick={() => onSwitchPage('register')} className="font-medium text-blue-500 hover:underline">
+          <button onClick={() => onSwitchPage('register')} className="font-medium text-indigo-400 hover:underline">
             Crie uma
           </button>
         </p>

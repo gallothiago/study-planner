@@ -3,7 +3,6 @@ import { db } from '../firebase/config';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import ScheduleForm from '../components/ScheduleForm';
 import ScheduleList from '../components/ScheduleList';
-// 1. Importamos o novo componente de sugestão
 import CvSuggestion from '../components/CvSuggestion';
 
 function CourseDetailPage({ courseId, onGoBack }) {
@@ -56,11 +55,11 @@ function CourseDetailPage({ courseId, onGoBack }) {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
       <header className="mb-8">
-        <button onClick={onGoBack} className="text-blue-400 hover:underline mb-4">&larr; Voltar para o Dashboard</button>
+        <button onClick={onGoBack} className="text-indigo-400 hover:underline mb-4">&larr; Voltar para o Dashboard</button>
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold text-white">{course.name}</h1>
-            <a href={course.link} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:underline">Acessar o curso</a>
+            <a href={course.link} target="_blank" rel="noopener noreferrer" className="text-sm text-indigo-400 hover:underline">Acessar o curso</a>
           </div>
           <span className={`px-3 py-1 text-sm font-semibold rounded-full ${course.completed ? 'bg-green-500 text-white' : 'bg-yellow-500 text-gray-900'}`}>
             {course.completed ? 'Concluído' : 'Em Progresso'}
@@ -73,15 +72,15 @@ function CourseDetailPage({ courseId, onGoBack }) {
           <form onSubmit={handleSaveChanges} className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4 h-fit">
             <div>
               <label htmlFor="lastLesson" className="block text-sm font-medium text-gray-300">Última aula assistida</label>
-              <input type="text" id="lastLesson" value={lastLesson} onChange={(e) => setLastLesson(e.target.value)} placeholder="Ex: Secção 5, Aula 32" className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md"/>
+              <input type="text" id="lastLesson" value={lastLesson} onChange={(e) => setLastLesson(e.target.value)} placeholder="Ex: Secção 5, Aula 32" className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
             </div>
             <div>
               <label htmlFor="notes" className="block text-sm font-medium text-gray-300">Anotações</label>
-              <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows="8" placeholder="Digite as suas anotações..." className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md"></textarea>
+              <textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows="8" placeholder="Digite as suas anotações..." className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
             </div>
             <div>
               <label htmlFor="certificateUrl" className="block text-sm font-medium text-gray-300">Link do Certificado</label>
-              <input type="url" id="certificateUrl" value={certificateUrl} onChange={(e) => setCertificateUrl(e.target.value)} placeholder="https://exemplo.com/certificado.pdf" className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md"/>
+              <input type="url" id="certificateUrl" value={certificateUrl} onChange={(e) => setCertificateUrl(e.target.value)} placeholder="https://exemplo.com/certificado.pdf" className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"/>
             </div>
             <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700">Salvar Alterações</button>
           </form>
@@ -93,7 +92,6 @@ function CourseDetailPage({ courseId, onGoBack }) {
              </button>
           </div>
 
-          {/* 2. Adicionamos o novo componente de sugestão de CV aqui */}
           <CvSuggestion courseName={course.name} />
         </div>
 
