@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Logo from '../components/Logo';
-import Footer from '../components/Footer'; // 1. Importamos o componente de rodapé
+import Footer from '../components/Footer';
 
 function LoginPage({ onSwitchPage }) {
   const [email, setEmail] = useState('');
@@ -19,7 +19,6 @@ function LoginPage({ onSwitchPage }) {
   };
 
   return (
-    // 2. Alteramos a estrutura para um layout de coluna que ocupa toda a altura do ecrã
     <div className="flex flex-col min-h-screen bg-gray-900 text-gray-100">
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-xl shadow-lg">
@@ -27,7 +26,7 @@ function LoginPage({ onSwitchPage }) {
             <Logo />
           </div>
           <p className="text-center text-gray-400">Faça login para continuar</p>
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 E-mail
@@ -56,6 +55,18 @@ function LoginPage({ onSwitchPage }) {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            
+            {/* 1. Adicionamos o link para a página de recuperação de senha */}
+            <div className="text-right">
+              <button
+                type="button" // Importante para não submeter o formulário
+                onClick={() => onSwitchPage('forgot-password')}
+                className="text-xs font-medium text-indigo-400 hover:underline"
+              >
+                Esqueceu a senha?
+              </button>
+            </div>
+
             <div>
               <button
                 type="submit"
@@ -65,7 +76,7 @@ function LoginPage({ onSwitchPage }) {
               </button>
             </div>
           </form>
-          <p className="text-sm text-center text-gray-400">
+          <p className="text-sm text-center text-gray-400 mt-6">
             Não tem uma conta?{' '}
             <button onClick={() => onSwitchPage('register')} className="font-medium text-indigo-400 hover:underline">
               Crie uma
@@ -73,7 +84,6 @@ function LoginPage({ onSwitchPage }) {
           </p>
         </div>
       </main>
-      {/* 3. Adicionamos o componente de rodapé no final */}
       <Footer />
     </div>
   );

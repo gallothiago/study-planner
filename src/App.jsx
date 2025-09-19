@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
-import CourseDetailPage from './pages/CourseDetailPage'; // 1. Importamos a nova página
+import CourseDetailPage from './pages/CourseDetailPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage'; // 1. Importamos a nova página
 import { auth } from './firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [authPage, setAuthPage] = useState('login');
-  // 2. Novo estado para controlar o curso selecionado
+  const [authPage, setAuthPage] = useState('login'); // O estado que controla qual página de auth mostrar
   const [selectedCourseId, setSelectedCourseId] = useState(null);
 
   useEffect(() => {
@@ -25,7 +25,6 @@ function App() {
     setAuthPage(pageName);
   };
 
-  // 3. Funções para navegar para os detalhes e voltar
   const handleSelectCourse = (courseId) => {
     setSelectedCourseId(courseId);
   };
@@ -42,17 +41,20 @@ function App() {
     );
   }
 
+  // Se não houver utilizador, entramos na lógica de autenticação
   if (!user) {
-    return authPage === 'login' ? (
-      <LoginPage onSwitchPage={handleSwitchPage} />
-    ) : (
-      <RegisterPage onSwitchPage={handleSwitchPage} />
-    );
+    // 2. Usamos um switch para decidir qual página de autenticação renderizar
+    switch (authPage) {
+      case 'register':
+        return <RegisterPage onSwitchPage={handleSwitchPage} />;
+      case 'forgot-password':
+        return <ForgotPasswordPage onSwitchPage={handleSwitchPage} />;
+      default: // O caso padrão será sempre a página de login
+        return <LoginPage onSwitchPage={handleSwitchPage} />;
+    }
   }
 
-  // 4. Lógica de renderização atualizada
-  // Se um curso está selecionado, mostramos a página de detalhes.
-  // Senão, mostramos o Dashboard.
+  // Se houver utilizador, entramos na lógica da aplicação principal
   return selectedCourseId ? (
     <CourseDetailPage courseId={selectedCourseId} onGoBack={handleGoBackToDashboard} />
   ) : (
