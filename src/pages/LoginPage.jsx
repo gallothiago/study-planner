@@ -56,10 +56,9 @@ function LoginPage({ onSwitchPage }) {
               />
             </div>
             
-            {/* 1. Adicionamos o link para a página de recuperação de senha */}
             <div className="text-right">
               <button
-                type="button" // Importante para não submeter o formulário
+                type="button"
                 onClick={() => onSwitchPage('forgot-password')}
                 className="text-xs font-medium text-indigo-400 hover:underline"
               >
@@ -76,12 +75,19 @@ function LoginPage({ onSwitchPage }) {
               </button>
             </div>
           </form>
-          <p className="text-sm text-center text-gray-400 mt-6">
-            Não tem uma conta?{' '}
-            <button onClick={() => onSwitchPage('register')} className="font-medium text-indigo-400 hover:underline">
-              Crie uma
+          
+          {/* 1. Alteramos esta secção para incluir o link de ajuda */}
+          <div className="flex justify-between items-center text-sm mt-6">
+            <button onClick={() => onSwitchPage('help')} className="font-medium text-indigo-400 hover:underline">
+              Como usar?
             </button>
-          </p>
+            <p className="text-gray-400">
+              Não tem uma conta?{' '}
+              <button onClick={() => onSwitchPage('register')} className="font-medium text-indigo-400 hover:underline">
+                Crie uma
+              </button>
+            </p>
+          </div>
         </div>
       </main>
       <Footer />

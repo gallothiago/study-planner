@@ -3,15 +3,18 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import CourseDetailPage from './pages/CourseDetailPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage'; // 1. Importamos a nova página
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import HelpPage from './pages/HelpPage'; // 1. Importamos a página de Ajuda
 import { auth } from './firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [authPage, setAuthPage] = useState('login'); // O estado que controla qual página de auth mostrar
+  const [authPage, setAuthPage] = useState('login');
   const [selectedCourseId, setSelectedCourseId] = useState(null);
+  // 2. Novo estado para controlar a visibilidade da página de ajuda
+  const [isHelpVisible, setIsHelpVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -21,8 +24,13 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  // 3. Esta função agora lida com todas as trocas de páginas "não autenticadas"
   const handleSwitchPage = (pageName) => {
-    setAuthPage(pageName);
+    if (pageName === 'help') {
+      setIsHelpVisible(true);
+    } else {
+      setAuthPage(pageName);
+    }
   };
 
   const handleSelectCourse = (courseId) => {
@@ -40,25 +48,34 @@ function App() {
       </div>
     );
   }
+  
+  // 4. Se a ajuda for solicitada, mostramo-la por cima de tudo.
+  // O botão de voltar na página de ajuda irá simplesmente desativar esta flag.
+  if (isHelpVisible) {
+    return <HelpPage onSwitchPage={() => setIsHelpVisible(false)} />;
+  }
 
-  // Se não houver utilizador, entramos na lógica de autenticação
+  // Se não houver utilizador, mostramos as páginas de autenticação
   if (!user) {
-    // 2. Usamos um switch para decidir qual página de autenticação renderizar
     switch (authPage) {
       case 'register':
         return <RegisterPage onSwitchPage={handleSwitchPage} />;
       case 'forgot-password':
         return <ForgotPasswordPage onSwitchPage={handleSwitchPage} />;
-      default: // O caso padrão será sempre a página de login
+      default:
         return <LoginPage onSwitchPage={handleSwitchPage} />;
     }
   }
 
-  // Se houver utilizador, entramos na lógica da aplicação principal
+  // Se houver utilizador, mostramos a aplicação principal
   return selectedCourseId ? (
     <CourseDetailPage courseId={selectedCourseId} onGoBack={handleGoBackToDashboard} />
   ) : (
-    <DashboardPage user={user} onSelectCourse={handleSelectCourse} />
+    <DashboardPage 
+      user={user} 
+      onSelectCourse={handleSelectCourse} 
+      onGoToHelp={() => setIsHelpVisible(true)} // Passamos a função para o Dashboard
+    />
   );
 }
 
