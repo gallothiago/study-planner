@@ -1,11 +1,12 @@
-import { useState } from 'react'; // 1. Importamos o useState
+import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
 import AddCourseForm from '../components/AddCourseForm';
 import CourseList from '../components/CourseList';
+// 1. Importamos o novo componente da lista de concluídos
+import CompletedCourseList from '../components/CompletedCourseList';
 
 function DashboardPage({ user, onSelectCourse }) {
-  // 2. Criamos um estado para controlar a visibilidade do formulário
   const [isFormVisible, setIsFormVisible] = useState(false);
 
   const handleLogout = async () => {
@@ -36,12 +37,9 @@ function DashboardPage({ user, onSelectCourse }) {
       </header>
 
       <main>
-        {/* 3. Lógica de renderização condicional */}
         {isFormVisible ? (
-          // Se for visível, mostramos o formulário e passamos uma função para o fechar
           <AddCourseForm user={user} onClose={() => setIsFormVisible(false)} />
         ) : (
-          // Senão, mostramos o botão para o abrir
           <div className="mb-8">
             <button
               onClick={() => setIsFormVisible(true)}
@@ -52,7 +50,11 @@ function DashboardPage({ user, onSelectCourse }) {
           </div>
         )}
 
+        {/* Lista de cursos em progresso */}
         <CourseList user={user} onSelectCourse={onSelectCourse} />
+
+        {/* 2. Adicionamos a nova lista de cursos concluídos aqui */}
+        <CompletedCourseList user={user} onSelectCourse={onSelectCourse} />
       </main>
     </div>
   );
