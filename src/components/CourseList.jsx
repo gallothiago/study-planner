@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase/config';
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
+// 1. Importamos as funções `doc` e `deleteDoc` do Firestore
+import { collection, query, where, onSnapshot, orderBy, doc, deleteDoc } from 'firebase/firestore';
 
-// A lista agora recebe a função `onSelectCourse`
 function CourseList({ user, onSelectCourse }) {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +27,23 @@ function CourseList({ user, onSelectCourse }) {
     return () => unsubscribe();
   }, [user.uid]);
 
+  // 2. Criamos uma função assíncrona para lidar com a exclusão
+  const handleDelete = async (e, courseId) => {
+    // e.stopPropagation() impede que o clique no botão ative o clique no <li>,
+    // que nos levaria para a página de detalhes.
+    e.stopPropagation();
+
+    // Seria ideal ter uma confirmação aqui, mas por agora vamos excluir diretamente.
+    const docRef = doc(db, 'courses', courseId);
+    try {
+      await deleteDoc(docRef);
+      console.log("Curso excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir o curso: ", error);
+      alert("Ocorreu um erro ao excluir o curso.");
+    }
+  };
+
   if (loading) {
     return <p className="text-center text-gray-400">Carregando cursos...</p>;
   }
@@ -39,7 +56,6 @@ function CourseList({ user, onSelectCourse }) {
       ) : (
         <ul className="space-y-4">
           {courses.map(course => (
-            // Adicionamos um onClick no <li> para chamar a função de navegação
             <li 
               key={course.id} 
               onClick={() => onSelectCourse(course.id)}
@@ -51,6 +67,14 @@ function CourseList({ user, onSelectCourse }) {
                 </span>
                 <p className="text-sm text-gray-300">Prioridade: {course.priority}</p>
               </div>
+              
+              {/* 3. Adicionamos o botão de Excluir */}
+              <button
+                onClick={(e) => handleDelete(e, course.id)}
+                className="px-3 py-1 text-sm font-semibold text-white bg-red-600 rounded-md hover:bg-red-700 z-10"
+              >
+                Excluir
+              </button>
             </li>
           ))}
         </ul>
