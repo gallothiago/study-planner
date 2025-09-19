@@ -3,6 +3,8 @@ import { db } from '../firebase/config';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import ScheduleForm from '../components/ScheduleForm';
 import ScheduleList from '../components/ScheduleList';
+// 1. Importamos o novo componente de sugestão
+import CvSuggestion from '../components/CvSuggestion';
 
 function CourseDetailPage({ courseId, onGoBack }) {
   const [course, setCourse] = useState(null);
@@ -32,15 +34,10 @@ function CourseDetailPage({ courseId, onGoBack }) {
     e.preventDefault();
     const docRef = doc(db, 'courses', courseId);
     try {
-      await updateDoc(docRef, {
-        notes,
-        lastLesson,
-        certificateUrl,
-      });
+      await updateDoc(docRef, { notes, lastLesson, certificateUrl });
       alert('Alterações salvas com sucesso!');
     } catch (error) {
       console.error("Erro ao atualizar o curso: ", error);
-      alert("Erro ao salvar as alterações.");
     }
   };
 
@@ -95,6 +92,9 @@ function CourseDetailPage({ courseId, onGoBack }) {
                {course.completed ? 'Marcar "Em Progresso"' : 'Marcar como Concluído'}
              </button>
           </div>
+
+          {/* 2. Adicionamos o novo componente de sugestão de CV aqui */}
+          <CvSuggestion courseName={course.name} />
         </div>
 
         <div className="space-y-8">
