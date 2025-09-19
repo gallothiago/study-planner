@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase/config';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+// 1. Importamos os novos componentes que acabou de criar
+import ScheduleForm from '../components/ScheduleForm';
+import ScheduleList from '../components/ScheduleList';
 
 function CourseDetailPage({ courseId, onGoBack }) {
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
-  // Estados para os campos do formulário
   const [notes, setNotes] = useState('');
   const [lastLesson, setLastLesson] = useState('');
 
-  // Efeito para buscar os dados do curso em tempo real
+  // Este useEffect continua igual, buscando os dados principais do curso
   useEffect(() => {
     const docRef = doc(db, 'courses', courseId);
     const unsubscribe = onSnapshot(docRef, (doc) => {
       if (doc.exists()) {
         const courseData = { id: doc.id, ...doc.data() };
         setCourse(courseData);
-        // Preenche os campos do formulário com os dados do Firestore
         setNotes(courseData.notes || '');
         setLastLesson(courseData.lastLesson || '');
       } else {
@@ -27,7 +28,7 @@ function CourseDetailPage({ courseId, onGoBack }) {
     return () => unsubscribe();
   }, [courseId]);
 
-  // Função para salvar as alterações
+  // Esta função de salvar as anotações também continua igual
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     const docRef = doc(db, 'courses', courseId);
@@ -51,6 +52,7 @@ function CourseDetailPage({ courseId, onGoBack }) {
     return <div className="min-h-screen bg-gray-900 text-white flex justify-center items-center">Curso não encontrado.</div>;
   }
 
+  // A principal mudança está aqui no JSX retornado
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
       <header className="mb-8">
@@ -63,8 +65,11 @@ function CourseDetailPage({ courseId, onGoBack }) {
         </a>
       </header>
 
-      <main>
-        <form onSubmit={handleSaveChanges} className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4">
+      {/* 2. Criamos um layout de duas colunas para ecrãs maiores */}
+      <main className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        {/* Coluna da Esquerda: Anotações e Lição */}
+        <form onSubmit={handleSaveChanges} className="p-6 bg-gray-800 rounded-xl shadow-lg space-y-4 h-fit">
           <div>
             <label htmlFor="lastLesson" className="block text-sm font-medium text-gray-300">Última aula assistida</label>
             <input
@@ -72,7 +77,7 @@ function CourseDetailPage({ courseId, onGoBack }) {
               id="lastLesson"
               value={lastLesson}
               onChange={(e) => setLastLesson(e.target.value)}
-              placeholder="Ex: Seção 5, Aula 32"
+              placeholder="Ex: Secção 5, Aula 32"
               className="w-full px-4 py-2 mt-2 text-gray-100 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -91,6 +96,12 @@ function CourseDetailPage({ courseId, onGoBack }) {
             Salvar Alterações
           </button>
         </form>
+
+        {/* 3. Coluna da Direita: Planeador de Horários */}
+        <div className="space-y-8">
+          <ScheduleForm courseId={courseId} />
+          <ScheduleList courseId={courseId} />
+        </div>
       </main>
     </div>
   );
