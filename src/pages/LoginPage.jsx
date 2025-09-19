@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { auth } from '../firebase/config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import Logo from '../components/Logo'; // 1. Importamos o nosso novo componente de Logo
 
 function LoginPage({ onSwitchPage }) {
   const [email, setEmail] = useState('');
@@ -19,9 +20,10 @@ function LoginPage({ onSwitchPage }) {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-xl shadow-lg">
-        <h1 className="text-3xl font-bold text-center text-white">
-          Study Planner
-        </h1>
+        <div className="flex justify-center">
+          {/* 2. Substituímos o <h1> pelo componente <Logo /> */}
+          <Logo />
+        </div>
         <p className="text-center text-gray-400">Faça login para continuar</p>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>

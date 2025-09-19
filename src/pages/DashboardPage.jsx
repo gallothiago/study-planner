@@ -4,8 +4,8 @@ import { signOut } from 'firebase/auth';
 import AddCourseForm from '../components/AddCourseForm';
 import CourseList from '../components/CourseList';
 import CompletedCourseList from '../components/CompletedCourseList';
-// 1. Importamos o novo componente do plano de estudos
 import StudySchedule from '../components/StudySchedule';
+import Logo from '../components/Logo'; // 1. Importamos o componente de Logo
 
 function DashboardPage({ user, onSelectCourse }) {
   const [isFormVisible, setIsFormVisible] = useState(false);
@@ -22,10 +22,9 @@ function DashboardPage({ user, onSelectCourse }) {
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
       <header className="flex flex-col md:flex-row justify-between md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
-            Study Planner
-          </h1>
-          <p className="text-indigo-400">
+          {/* 2. Substituímos o <h1> e o <p> pelo componente <Logo /> */}
+          <Logo />
+          <p className="text-indigo-400 mt-1">
             Bem-vindo(a), {user.displayName || 'Utilizador'}!
           </p>
         </div>
@@ -51,11 +50,8 @@ function DashboardPage({ user, onSelectCourse }) {
           </div>
         )}
 
-        {/* 2. Adicionamos o novo painel do plano de estudos aqui */}
         <StudySchedule user={user} onSelectCourse={onSelectCourse} />
-
         <CourseList user={user} onSelectCourse={onSelectCourse} />
-
         <CompletedCourseList user={user} onSelectCourse={onSelectCourse} />
       </main>
     </div>
