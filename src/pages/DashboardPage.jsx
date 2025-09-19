@@ -1,12 +1,10 @@
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
-// 1. Importamos os novos componentes
 import AddCourseForm from '../components/AddCourseForm';
 import CourseList from '../components/CourseList';
 
-// 2. O Dashboard agora recebe o objeto `user` como prop
-function DashboardPage({ user }) {
-
+// O Dashboard agora recebe `onSelectCourse` e passa para a CourseList
+function DashboardPage({ user, onSelectCourse }) {
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -28,11 +26,9 @@ function DashboardPage({ user }) {
           Logout
         </button>
       </header>
-
       <main>
-        {/* 3. Renderizamos o formulário e a lista, passando o `user` para eles */}
         <AddCourseForm user={user} />
-        <CourseList user={user} />
+        <CourseList user={user} onSelectCourse={onSelectCourse} />
       </main>
     </div>
   );
