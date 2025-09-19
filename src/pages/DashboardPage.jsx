@@ -1,25 +1,25 @@
-// Importamos as ferramentas de autenticação para o logout
 import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
+// 1. Importamos os novos componentes
+import AddCourseForm from '../components/AddCourseForm';
+import CourseList from '../components/CourseList';
 
-function DashboardPage() {
+// 2. O Dashboard agora recebe o objeto `user` como prop
+function DashboardPage({ user }) {
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      // O logout bem-sucedido será detectado pelo nosso "ouvinte" no App.jsx,
-      // e o usuário será redirecionado para a tela de login.
-      console.log('Usuário deslogado com sucesso!');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-8">
-      <header className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-bold text-white">
-          Study Planner Dashboard
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-4 md:p-8">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-white">
+          Study Planner
         </h1>
         <button
           onClick={handleLogout}
@@ -30,11 +30,9 @@ function DashboardPage() {
       </header>
 
       <main>
-        <h2 className="text-2xl">Bem-vindo(a)!</h2>
-        <p className="text-gray-400 mt-2">
-          Aqui você poderá adicionar e gerenciar seus cursos.
-        </p>
-        {/* Futuramente, o conteúdo principal do seu planner virá aqui */}
+        {/* 3. Renderizamos o formulário e a lista, passando o `user` para eles */}
+        <AddCourseForm user={user} />
+        <CourseList user={user} />
       </main>
     </div>
   );

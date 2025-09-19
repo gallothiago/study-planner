@@ -1,10 +1,8 @@
-// Importa as funções necessárias do SDK do Firebase
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-// Futuramente, importaremos outros serviços como o Firestore aqui
+// 1. Importamos a função do Firestore
+import { getFirestore } from "firebase/firestore";
 
-// Explicação: Este objeto de configuração agora lê as variáveis de ambiente
-// do arquivo .env.local de forma segura, usando import.meta.env.
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -14,8 +12,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_APP_ID
 };
 
-// Inicializa o Firebase com nossa configuração
 const app = initializeApp(firebaseConfig);
-
-// Inicializa o serviço de Autenticação e o exporta para ser usado em outras partes do app
 export const auth = getAuth(app);
+
+// 2. Inicializamos o Firestore e o exportamos
+export const db = getFirestore(app);
