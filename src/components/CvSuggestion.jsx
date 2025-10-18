@@ -13,7 +13,7 @@ function CvSuggestion({ courseName }) {
     setError('');
     setSuggestion('');
 
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
     
     // Este é o "prompt", a instrução que damos à IA.
     const prompt = `Aja como um especialista em recrutamento. Crie uma sugestão curta e impactante (1-2 frases) de como descrever a conclusão do seguinte curso em um currículo, destacando as competências adquiridas. Curso: "${courseName}"`;
