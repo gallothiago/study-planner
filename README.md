@@ -1,4 +1,4 @@
-Study Planner
+Study Planner.
 Um web app moderno e pessoal para organizar e acompanhar o seu percurso de aprendizagem, construído com React, Firebase e Tailwind CSS, e com funcionalidades de IA do Google Gemini.
 
 ---
